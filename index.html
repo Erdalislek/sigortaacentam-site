@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sigorta Acentam</title>
+</head>
+<body>
+
+<h2>Sigorta Teklif Formu</h2>
+
+<input id="adSoyad" placeholder="Ad Soyad"><br><br>
+<input id="telefon" placeholder="Telefon"><br><br>
+
+<select id="sigortaTuru">
+  <option value="trafik">Trafik</option>
+  <option value="kasko">Kasko</option>
+</select><br><br>
+
+<textarea id="mesaj" placeholder="Mesaj"></textarea><br><br>
+
+<button onclick="gonder()">Teklif Gönder</button>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDJgao5IdNccsuctl9vojXf8GuJPaMdrsk",
+  authDomain: "sigortaacentam-9e228.firebaseapp.com",
+  projectId: "sigortaacentam-9e228",
+  storageBucket: "sigortaacentam-9e228.firebasestorage.app",
+  messagingSenderId: "518793231741",
+  appId: "1:518793231741:web:39a3908c182a509a8d2014"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+function gonder() {
+  const adSoyad = document.getElementById("adSoyad").value;
+  const telefon = document.getElementById("telefon").value;
+  const sigortaTuru = document.getElementById("sigortaTuru").value;
+  const mesaj = document.getElementById("mesaj").value;
+
+  db.collection("teklifler").add({
+    adSoyad,
+    telefon,
+    sigortaTuru,
+    mesaj,
+    durum: "yeni",
+    tarih: new Date().toLocaleString()
+  });
+
+  alert("Kaydedildi!");
+}
+</script>
+
+</body>
+</html>
