@@ -1,58 +1,593 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-  <title>Sigorta Acentam</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>sigortaacentam.com</title>
+  <meta name="description" content="Trafik, kasko, sağlık, konut, DASK ve diğer sigorta branşlarında hızlı teklif alın." />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f9fb;
+      color: #111;
+    }
+    a { text-decoration: none; }
+
+    .topbar {
+      background: #000;
+      color: #fff;
+      padding: 14px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    .topbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      font-size: 24px;
+      font-weight: bold;
+      color: #20b2aa;
+    }
+    .brand small {
+      display: block;
+      color: #ddd;
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 3px;
+    }
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .btn-primary {
+      background: #20b2aa;
+      color: #fff;
+    }
+    .btn-dark {
+      background: #111;
+      color: #fff;
+    }
+    .btn-red {
+      background: #d62828;
+      color: #fff;
+    }
+    .btn-white {
+      background: #fff;
+      color: #111;
+      border: 1px solid #ddd;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #000 0%, #0e2a2a 45%, #20b2aa 100%);
+      color: #fff;
+      padding: 70px 20px 50px;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 30px;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: 46px;
+      line-height: 1.15;
+      margin: 0 0 16px;
+    }
+    .hero p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #e8f8f7;
+      margin: 0 0 24px;
+    }
+    .hero-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+    }
+
+    .form-card {
+      background: #fff;
+      color: #111;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    }
+    .form-card h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+    .form-card p {
+      color: #666;
+      margin-top: 0;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .full { grid-column: 1 / -1; }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1px solid #d8dee5;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #555;
+    }
+    .checkbox-row input {
+      width: auto;
+      margin-top: 3px;
+    }
+    .note-box {
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-top: 10px;
+      display: none;
+    }
+    .success {
+      background: #e8faf7;
+      color: #0b6b65;
+      border: 1px solid #bceae4;
+    }
+    .error {
+      background: #fff1f1;
+      color: #b42318;
+      border: 1px solid #f5c2c7;
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 55px 20px;
+    }
+    .section-title {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .section-title h2 {
+      font-size: 34px;
+      margin: 0 0 10px;
+    }
+    .section-title p {
+      margin: 0;
+      color: #666;
+      font-size: 16px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+      border: 1px solid #edf0f2;
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+    .card p {
+      margin: 0;
+      color: #666;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .step {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06);
+      border: 1px solid #edf0f2;
+    }
+    .step-number {
+      width: 42px;
+      height: 42px;
+      background: #20b2aa;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-bottom: 14px;
+    }
+    .step h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+    .step p {
+      margin: 0;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .cta {
+      background: linear-gradient(135deg, #111 0%, #1b1b1b 100%);
+      color: #fff;
+      border-radius: 22px;
+      padding: 34px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .cta h2 {
+      margin: 0 0 8px;
+      font-size: 30px;
+    }
+    .cta p {
+      margin: 0;
+      color: #ddd;
+    }
+
+    footer {
+      background: #000;
+      color: #fff;
+      margin-top: 30px;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 36px 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 20px;
+    }
+    .footer-title {
+      color: #20b2aa;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .footer-text {
+      color: #ccc;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    @media (max-width: 1000px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 { font-size: 34px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: 1fr; }
+      .topbar-inner { align-items: flex-start; }
+    }
+  </style>
 </head>
 <body>
 
-<h2>Sigorta Teklif Formu</h2>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <div class="brand">sigortaacentam.com</div>
+        <small>Hızlı teklif, güvenilir hizmet</small>
+      </div>
+      <div class="top-actions">
+        <a class="btn btn-white" href="#teklif">Teklif Al</a>
+        <a class="btn btn-red" href="https://wa.me/905526961881?text=Merhaba%2C%20sigortaacentam.com%20%C3%BCzerinden%20bilgi%20almak%20istiyorum." target="_blank">WhatsApp</a>
+      </div>
+    </div>
+  </div>
 
-<input id="adSoyad" placeholder="Ad Soyad"><br><br>
-<input id="telefon" placeholder="Telefon"><br><br>
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <h1>Sigorta tekliflerinizi tek tıkla alın.</h1>
+        <p>
+          Trafik, kasko, sağlık, konut, DASK, işyeri ve daha birçok branşta teklif talebinizi iletin.
+          Size en uygun seçenekler için hızlıca dönüş yapalım.
+        </p>
 
-<select id="sigortaTuru">
-  <option value="trafik">Trafik</option>
-  <option value="kasko">Kasko</option>
-</select><br><br>
+        <div class="top-actions">
+          <a class="btn btn-primary" href="#teklif">Hemen Teklif Al</a>
+          <a class="btn btn-red" href="https://wa.me/905526961881?text=Merhaba%2C%20sigortaacentam.com%20%C3%BCzerinden%20teklif%20almak%20istiyorum." target="_blank">WhatsApp’tan Yaz</a>
+        </div>
 
-<textarea id="mesaj" placeholder="Mesaj"></textarea><br><br>
+        <div class="hero-badges">
+          <div class="hero-badge">7/24 teklif talebi toplama</div>
+          <div class="hero-badge">Hızlı geri dönüş</div>
+          <div class="hero-badge">Mobil uyumlu</div>
+        </div>
+      </div>
 
-<button onclick="gonder()">Teklif Gönder</button>
+      <div class="form-card" id="teklif">
+        <h2>Ücretsiz Teklif Al</h2>
+        <p>Bilgilerinizi bırakın, en kısa sürede size dönüş yapalım.</p>
 
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+        <form id="teklifFormu">
+          <div class="form-grid">
+            <div>
+              <input id="adSoyad" type="text" placeholder="Ad Soyad" />
+            </div>
+            <div>
+              <input id="telefon" type="text" placeholder="Telefon" />
+            </div>
 
-<script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDJgao5IdNccsuctl9vojXf8GuJPaMdrsk",
-  authDomain: "sigortaacentam-9e228.firebaseapp.com",
-  projectId: "sigortaacentam-9e228",
-  storageBucket: "sigortaacentam-9e228.firebasestorage.app",
-  messagingSenderId: "518793231741",
-  appId: "1:518793231741:web:39a3908c182a509a8d2014"
-};
+            <div class="full">
+              <input id="email" type="email" placeholder="E-posta" />
+            </div>
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+            <div class="full">
+              <select id="sigortaTuru">
+                <option value="">Sigorta Türü Seçin</option>
+                <option>Zorunlu Trafik Sigortası</option>
+                <option>Kasko Sigortası</option>
+                <option>Tamamlayıcı Sağlık Sigortası</option>
+                <option>Özel Sağlık Sigortası</option>
+                <option>Konut Sigortası</option>
+                <option>DASK</option>
+                <option>İşyeri Sigortası</option>
+                <option>Ferdi Kaza Sigortası</option>
+                <option>Hayat Sigortası</option>
+                <option>BES</option>
+                <option>Seyahat Sağlık Sigortası</option>
+                <option>Nakliyat Sigortası</option>
+                <option>Ticari Alacak Sigortası</option>
+                <option>Mühendislik Sigortaları</option>
+                <option>Tarım Sigortası</option>
+                <option>Tekne / Yat Sigortası</option>
+                <option>Sorumluluk Sigortaları</option>
+                <option>Mesleki Sorumluluk Sigortası</option>
+              </select>
+            </div>
 
-function gonder() {
-  const adSoyad = document.getElementById("adSoyad").value;
-  const telefon = document.getElementById("telefon").value;
-  const sigortaTuru = document.getElementById("sigortaTuru").value;
-  const mesaj = document.getElementById("mesaj").value;
+            <div class="full">
+              <input id="kisaBilgi" type="text" placeholder="Plaka / TC / kısa bilgi" />
+            </div>
 
-  db.collection("teklifler").add({
-    adSoyad,
-    telefon,
-    sigortaTuru,
-    mesaj,
-    durum: "yeni",
-    tarih: new Date().toLocaleString()
-  });
+            <div class="full">
+              <textarea id="mesaj" placeholder="Talebinizi yazın"></textarea>
+            </div>
 
-  alert("Kaydedildi!");
-}
-</script>
+            <div class="full checkbox-row">
+              <input id="izin" type="checkbox" />
+              <label for="izin">Kişisel verilerimin teklif hazırlanması amacıyla işlenmesini kabul ediyorum.</label>
+            </div>
 
+            <div class="full">
+              <button class="btn btn-primary" type="submit" style="width:100%;">Teklif Gönder</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="basariMesaji" class="note-box success"></div>
+        <div id="hataMesaji" class="note-box error"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Hizmet Verdiğimiz Branşlar</h2>
+      <p>İhtiyacınıza uygun birçok sigorta türünde teklif talebi oluşturabilirsiniz.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card"><h3>Trafik Sigortası</h3><p>Zorunlu trafik sigortası için hızlı teklif alın.</p></div>
+      <div class="card"><h3>Kasko Sigortası</h3><p>Aracınız için kapsamlı kasko seçeneklerini değerlendirin.</p></div>
+      <div class="card"><h3>Sağlık Sigortaları</h3><p>Tamamlayıcı sağlık ve özel sağlık sigortası teklifleri.</p></div>
+      <div class="card"><h3>Konut ve DASK</h3><p>Evinizi ve yaşam alanınızı güvence altına alın.</p></div>
+      <div class="card"><h3>İşyeri Sigortası</h3><p>İşletmenizi olası risklere karşı koruyun.</p></div>
+      <div class="card"><h3>Hayat ve BES</h3><p>Geleceğinizi güvence altına alan çözümler.</p></div>
+      <div class="card"><h3>Seyahat ve Ferdi Kaza</h3><p>Yurt içi ve yurt dışı planlarınız için uygun çözümler.</p></div>
+      <div class="card"><h3>Ticari ve Özel Branşlar</h3><p>Nakliyat, sorumluluk, mühendislik ve diğer özel branşlar.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Neden Bizi Tercih Etmelisiniz?</h2>
+      <p>Hızlı iletişim, düzenli takip ve güven veren hizmet anlayışı.</p>
+    </div>
+
+    <div class="cards">
+      <div class="card"><h3>Hızlı Geri Dönüş</h3><p>Talebiniz sisteme düştüğü anda sizinle en kısa sürede iletişime geçilir.</p></div>
+      <div class="card"><h3>Kolay Başvuru</h3><p>Uzun ve karmaşık formlar yerine sade ve hızlı teklif süreci.</p></div>
+      <div class="card"><h3>WhatsApp Desteği</h3><p>İsterseniz doğrudan WhatsApp üzerinden hızlı bilgi alabilirsiniz.</p></div>
+      <div class="card"><h3>Profesyonel Takip</h3><p>Gelen talepler düzenli olarak takip edilir ve süreç yönetilir.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">
+      <h2>Nasıl Çalışır?</h2>
+      <p>3 adımda teklif sürecinizi başlatın.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-number">1</div>
+        <h3>Formu Doldurun</h3>
+        <p>Ad, telefon ve ihtiyacınız olan sigorta türünü bize iletin.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <h3>Bilgileriniz Sisteme Düşsün</h3>
+        <p>Talebiniz anında kayıt altına alınır ve değerlendirmeye alınır.</p>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <h3>Teklifinizi Alın</h3>
+        <p>Size uygun teklif seçenekleri hazırlanır ve hızlıca dönüş yapılır.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="cta">
+      <div>
+        <h2>Hemen teklif almak ister misiniz?</h2>
+        <p>Formu doldurun veya doğrudan WhatsApp üzerinden bize yazın.</p>
+      </div>
+      <div class="top-actions">
+        <a class="btn btn-primary" href="#teklif">Teklif Formuna Git</a>
+        <a class="btn btn-red" href="https://wa.me/905526961881?text=Merhaba%2C%20sigortaacentam.com%20%C3%BCzerinden%20teklif%20almak%20istiyorum." target="_blank">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-title">sigortaacentam.com</div>
+        <div class="footer-text">
+          Sigorta teklif süreçlerinizi dijitale taşıyan, hızlı geri dönüş sağlayan profesyonel teklif platformu.
+        </div>
+      </div>
+      <div>
+        <div class="footer-title" style="font-size:18px;">İletişim</div>
+        <div class="footer-text">
+          Telefon: 0552 696 1881<br>
+          WhatsApp: 0552 696 1881<br>
+          E-posta: erdal.islekk@gmail.com
+        </div>
+      </div>
+      <div>
+        <div class="footer-title" style="font-size:18px;">Çalışma Alanları</div>
+        <div class="footer-text">
+          Trafik, Kasko, Sağlık, Konut, DASK, İşyeri, Hayat, BES ve diğer sigorta branşları
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDJgao5IdNccsuctl9vojXf8GuJPaMdrsk",
+      authDomain: "sigortaacentam-9e228.firebaseapp.com",
+      projectId: "sigortaacentam-9e228",
+      storageBucket: "sigortaacentam-9e228.firebasestorage.app",
+      messagingSenderId: "518793231741",
+      appId: "1:518793231741:web:39a3908c182a509a8d2014"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const form = document.getElementById("teklifFormu");
+    const basari = document.getElementById("basariMesaji");
+    const hata = document.getElementById("hataMesaji");
+
+    function mesajTemizle() {
+      basari.style.display = "none";
+      hata.style.display = "none";
+      basari.textContent = "";
+      hata.textContent = "";
+    }
+
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault();
+      mesajTemizle();
+
+      const adSoyad = document.getElementById("adSoyad").value.trim();
+      const telefon = document.getElementById("telefon").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const sigortaTuru = document.getElementById("sigortaTuru").value;
+      const kisaBilgi = document.getElementById("kisaBilgi").value.trim();
+      const mesaj = document.getElementById("mesaj").value.trim();
+      const izin = document.getElementById("izin").checked;
+
+      if (!adSoyad || !telefon || !sigortaTuru) {
+        hata.textContent = "Lütfen Ad Soyad, Telefon ve Sigorta Türü alanlarını doldurun.";
+        hata.style.display = "block";
+        return;
+      }
+
+      if (!izin) {
+        hata.textContent = "Devam etmek için KVKK onay kutusunu işaretleyin.";
+        hata.style.display = "block";
+        return;
+      }
+
+      try {
+        await db.collection("teklifler").add({
+          adSoyad,
+          telefon,
+          email,
+          sigortaTuru,
+          kisaBilgi,
+          mesaj,
+          durum: "yeni",
+          kaynak: "website",
+          tarih: new Date().toLocaleString("tr-TR")
+        });
+
+        basari.textContent = "Talebiniz başarıyla alındı. En kısa sürede size dönüş yapılacaktır.";
+        basari.style.display = "block";
+        form.reset();
+      } catch (err) {
+        hata.textContent = "Kayıt sırasında bir hata oluştu. Lütfen tekrar deneyin.";
+        hata.style.display = "block";
+      }
+    });
+  </script>
 </body>
 </html>
