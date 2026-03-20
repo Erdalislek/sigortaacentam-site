@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sigorta Acentam - Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f5f7fa;
+      color: #111;
+    }
+    header {
+      background: #000;
+      color: #fff;
+      padding: 16px 20px;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    .card h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #666;
+    }
+    .card strong {
+      font-size: 24px;
+    }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    input, select {
+      padding: 10px 12px;
+      border: 1px solid #d0d7de;
+      border-radius: 10px;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      vertical-align: top;
+      font-size: 14px;
+    }
+    th {
+      background: #111;
+      color: #fff;
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .yeni { background: #0ea5a4; }
+    .arandi { background: #2563eb; }
+    .teklif-verildi { background: #ea580c; }
+    .satis-oldu { background: #16a34a; }
+    .kaybedildi { background: #dc2626; }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .actions button {
+      border: none;
+      padding: 8px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .btn1 { background: #0ea5a4; color: #fff; }
+    .btn2 { background: #2563eb; color: #fff; }
+    .btn3 { background: #ea580c; color: #fff; }
+    .btn4 { background: #16a34a; color: #fff; }
+    .btn5 { background: #dc2626; color: #fff; }
+    .small {
+      font-size: 12px;
+      color: #666;
+    }
+    .empty {
+      padding: 20px;
+      text-align: center;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+    @media (max-width: 900px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead {
+        display: none;
+      }
+      tr {
+        margin-bottom: 14px;
+        background: #fff;
+        border-radius: 14px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        padding: 8px;
+      }
+      td {
+        border-bottom: 1px solid #eee;
+      }
+      td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 6px;
+        font-weight: bold;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <h1>Sigorta Acentam - Yönetim Paneli</h1>
+      <div class="small">Gelen teklif talepleri</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="stats">
+      <div class="card"><h3>Toplam Talep</h3><strong id="toplam">0</strong></div>
+      <div class="card"><h3>Yeni</h3><strong id="yeniSayisi">0</strong></div>
+      <div class="card"><h3>Teklif Verildi</h3><strong id="teklifSayisi">0</strong></div>
+      <div class="card"><h3>Satış Oldu</h3><strong id="satisSayisi">0</strong></div>
+    </div>
+
+    <div class="toolbar">
+      <input type="text" id="arama" placeholder="Ad, telefon, sigorta türü ara" />
+      <select id="durumFiltre">
+        <option value="">Tüm durumlar</option>
+        <option value="yeni">Yeni</option>
+        <option value="arandı">Arandı</option>
+        <option value="teklif verildi">Teklif Verildi</option>
+        <option value="satış oldu">Satış Oldu</option>
+        <option value="kaybedildi">Kaybedildi</option>
+      </select>
+      <button onclick="verileriYukle()">Yenile</button>
+    </div>
+
+    <div id="tabloAlani"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDJgao5IdNccsuctl9vojXf8GuJPaMdrsk",
+      authDomain: "sigortaacentam-9e228.firebaseapp.com",
+      projectId: "sigortaacentam-9e228",
+      storageBucket: "sigortaacentam-9e228.firebasestorage.app",
+      messagingSenderId: "518793231741",
+      appId: "1:518793231741:web:39a3908c182a509a8d2014"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let tumVeriler = [];
+
+    function badgeClass(durum) {
+      if (durum === "yeni") return "yeni";
+      if (durum === "arandı") return "arandi";
+      if (durum === "teklif verildi") return "teklif-verildi";
+      if (durum === "satış oldu") return "satis-oldu";
+      if (durum === "kaybedildi") return "kaybedildi";
+      return "yeni";
+    }
+
+    async function durumGuncelle(id, yeniDurum) {
+      await db.collection("teklifler").doc(id).update({
+        durum: yeniDurum
+      });
+      verileriYukle();
+    }
+
+    function istatistikleriBas(veriler) {
+      document.getElementById("toplam").textContent = veriler.length;
+      document.getElementById("yeniSayisi").textContent = veriler.filter(x => x.durum === "yeni").length;
+      document.getElementById("teklifSayisi").textContent = veriler.filter(x => x.durum === "teklif verildi").length;
+      document.getElementById("satisSayisi").textContent = veriler.filter(x => x.durum === "satış oldu").length;
+    }
+
+    function tabloyuBas(veriler) {
+      const alan = document.getElementById("tabloAlani");
+
+      if (!veriler.length) {
+        alan.innerHTML = '<div class="empty">Kayıt bulunamadı.</div>';
+        return;
+      }
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Müşteri</th>
+              <th>Telefon</th>
+              <th>Sigorta Türü</th>
+              <th>Mesaj</th>
+              <th>Durum</th>
+              <th>Tarih</th>
+              <th>İşlem</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      veriler.forEach(item => {
+        html += `
+          <tr>
+            <td data-label="Müşteri">${item.adSoyad || ""}</td>
+            <td data-label="Telefon">
+              <a href="https://wa.me/90${String(item.telefon || "").replace(/^0/, "")}" target="_blank">
+                ${item.telefon || ""}
+              </a>
+            </td>
+            <td data-label="Sigorta Türü">${item.sigortaTuru || ""}</td>
+            <td data-label="Mesaj">${item.mesaj || ""}</td>
+            <td data-label="Durum">
+              <span class="badge ${badgeClass(item.durum || "yeni")}">${item.durum || "yeni"}</span>
+            </td>
+            <td data-label="Tarih">${item.tarih || ""}</td>
+            <td data-label="İşlem">
+              <div class="actions">
+                <button class="btn1" onclick="durumGuncelle('${item.id}', 'yeni')">Yeni</button>
+                <button class="btn2" onclick="durumGuncelle('${item.id}', 'arandı')">Arandı</button>
+                <button class="btn3" onclick="durumGuncelle('${item.id}', 'teklif verildi')">Teklif Verildi</button>
+                <button class="btn4" onclick="durumGuncelle('${item.id}', 'satış oldu')">Satış Oldu</button>
+                <button class="btn5" onclick="durumGuncelle('${item.id}', 'kaybedildi')">Kaybedildi</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+
+      html += `</tbody></table>`;
+      alan.innerHTML = html;
+    }
+
+    function filtreleVeBas() {
+      const arama = document.getElementById("arama").value.toLowerCase().trim();
+      const durumFiltre = document.getElementById("durumFiltre").value;
+
+      const filtreli = tumVeriler.filter(item => {
+        const metin =
+          `${item.adSoyad || ""} ${item.telefon || ""} ${item.sigortaTuru || ""} ${item.mesaj || ""}`.toLowerCase();
+
+        const aramaUygun = !arama || metin.includes(arama);
+        const durumUygun = !durumFiltre || item.durum === durumFiltre;
+
+        return aramaUygun && durumUygun;
+      });
+
+      istatistikleriBas(tumVeriler);
+      tabloyuBas(filtreli);
+    }
+
+    async function verileriYukle() {
+      const snap = await db.collection("teklifler").get();
+      tumVeriler = snap.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })).reverse();
+
+      filtreleVeBas();
+    }
+
+    document.getElementById("arama").addEventListener("input", filtreleVeBas);
+    document.getElementById("durumFiltre").addEventListener("change", filtreleVeBas);
+
+    verileriYukle();
+  </script>
+</body>
+</html>
