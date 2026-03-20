@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Giriş</title>
+</head>
+<body>
+
+<h2>Admin Giriş</h2>
+
+<input id="email" placeholder="Email"><br><br>
+<input id="password" type="password" placeholder="Şifre"><br><br>
+
+<button onclick="giris()">Giriş Yap</button>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "BURAYA SENİN KEY",
+  authDomain: "BURAYA SENİN DOMAIN",
+  projectId: "BURAYA SENİN PROJECT ID",
+};
+
+firebase.initializeApp(firebaseConfig);
+
+function giris() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then(() => {
+      window.location.href = "admin.html";
+    })
+    .catch(() => alert("Hatalı giriş"));
+}
+</script>
+
+</body>
+</html>
